@@ -34,19 +34,18 @@ const init = function() {
 
         // Prepare bar chart
         // Add .reserve function to list starting with the largest
-        let trace = {
+        let data = [{
             x: plotData.sample_values.reverse(),
             y: plotData.otu_ids.map(id => "OTU "+id).reverse(),
             text: plotData.otu_labels.reverse(),
             orientation: 'h',
             type: 'bar'
-        };
-        let data = [trace];
+        }];
         Plotly.newPlot('bar', data);
 
         // Prepare bubble chart
         plotData = getPlotDataByID(id);
-        trace = {
+        data = [{
             x: plotData.otu_ids,
             y: plotData.sample_values,
             text: plotData.otu_labels,
@@ -55,9 +54,32 @@ const init = function() {
                 size:  plotData.sample_values,
             },
             mode: 'markers'
-        }
-        data = [trace];
+        }];
         Plotly.newPlot('bubble', data);
+
+        // Prepare gauge chart
+        data = [{
+            type: "indicator",
+            mode: "gauge+number+delta",
+            value: plotData.metadata.wfreq,
+            title: { text: "Belly Button Washing Frequency", font: { size: 17 } },
+            gauge: {
+                axis: { range: [null, 9], tickwidth: 1, tickcolor: "darkblue" },
+                bar: { color: "firebrick" },
+                steps: [
+                    { range: [0, 2], color: d3.rgb(230,255,230) },
+                    { range: [2, 3], color: d3.rgb(200,240,200) },
+                    { range: [3, 4], color: d3.rgb(170,220,170) },
+                    { range: [4, 5], color: d3.rgb(140,200,140) },
+                    { range: [5, 6], color: d3.rgb(110,180,110) },
+                    { range: [6, 7], color: d3.rgb(80,160,80) },
+                    { range: [7, 8], color: d3.rgb(50,140,50) },
+                    { range: [8, 9], color: d3.rgb(30,120,30) }
+                ]
+            }
+        }];
+        Plotly.newPlot('gauge', data);
+
     })
     .catch(err => {
         console.log(`Error occurred: ${err}`);
@@ -125,7 +147,7 @@ const optionChanged = function(id) {
     Plotly.restyle('bubble', 'x', [trace.x]);
     Plotly.restyle('bubble', 'y', [trace.y]);
     Plotly.restyle('bubble', 'text', [trace.text]);
-    Plotly.restyle('bubble', 'markers', [{color:plotData.otu_ids,size:  plotData.sample_values}]);
+    Plotly.restyle('bubble', 'markers', [{color: trace.marker.color, size: trace.marker.size}]);
 };
 
 const displayDemoInfo = function (data) {
