@@ -31,6 +31,8 @@ const init = function() {
         console.log("Plotdata is: ");
         console.log(plotData);
 
+        displayDemoInfo(plotData.metadata);
+
         // Add chart type info
         // Add .reserve function to list starting with the largest
         const trace = {
@@ -76,7 +78,7 @@ const getPlotDataByID = function (id, firstX) {
     return plotData;
 };
 
-
+// Event handler already added via 'onchange' property in HTML
 const optionChanged = function(id) {
     // Get the ID number selected
     //const id = selDataset.node().value;
@@ -86,6 +88,9 @@ const optionChanged = function(id) {
     const plotData = getPlotDataByID(id, sampleLimit);
     console.log("Plotdata is: ");
     console.log(plotData);
+    
+    displayDemoInfo(plotData.metadata);
+
     const trace = {
         x: plotData.sample_values.reverse(),
         y: plotData.otu_ids.map(id => "OTU "+id).reverse(),
@@ -98,7 +103,19 @@ const optionChanged = function(id) {
     Plotly.restyle('bar', 'text', [trace.text]);
 };
 
+const displayDemoInfo = function (data) {
+    const demoTag = d3.select('#sample-metadata');
+    // Emtpy div tag content first
+    demoTag.html("");
+   
+    demoTag.append('p').text(`id: ${data.id}`);
+    demoTag.append('p').text(`ethnicity: ${data.ethnicity}`);
+    demoTag.append('p').text(`gender: ${data.gender}`);
+    demoTag.append('p').text(`age: ${data.age}`);
+    demoTag.append('p').text(`location: ${data.location}`);
+    demoTag.append('p').text(`bbtype: ${data.bbtype}`);
+    demoTag.append('p').text(`wfreq: ${data.wfreq}`);
+};
 
-// Add event handler for when pull down list is selected
-// selDataset.on('change', updatePlot);
+
 init();
