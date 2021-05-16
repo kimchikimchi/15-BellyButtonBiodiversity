@@ -18,7 +18,6 @@ const init = function() {
         samples = json.samples;
 
         // Populate the select pulldown list
-
         names.forEach(name => 
             selDataset.append('option').text(name).attr('value', name));
 
@@ -33,7 +32,7 @@ const init = function() {
 
         displayDemoInfo(plotData.metadata);
 
-        // Add chart type info
+        // Prepare bar chart
         // Add .reserve function to list starting with the largest
         let trace = {
             x: plotData.sample_values.reverse(),
@@ -43,9 +42,9 @@ const init = function() {
             type: 'bar'
         };
         let data = [trace];
-        
         Plotly.newPlot('bar', data);
 
+        // Prepare bubble chart
         plotData = getPlotDataByID(id);
         trace = {
             x: plotData.otu_ids,
@@ -58,7 +57,6 @@ const init = function() {
             mode: 'markers'
         }
         data = [trace];
-
         Plotly.newPlot('bubble', data);
     })
     .catch(err => {
@@ -103,17 +101,17 @@ const optionChanged = function(id) {
     
     displayDemoInfo(plotData.metadata);
 
+    // Update bar chart
     let trace = {
         x: plotData.sample_values.reverse(),
         y: plotData.otu_ids.map(id => "OTU "+id).reverse(),
         text: plotData.otu_labels.reverse()
     };
-
-    // Update the plot
     Plotly.restyle('bar', 'x', [trace.x]);
     Plotly.restyle('bar', 'y', [trace.y]);
     Plotly.restyle('bar', 'text', [trace.text]);
 
+    // Update bubble chart
     plotData = getPlotDataByID(id);
     trace = {
         x: plotData.otu_ids,
@@ -124,7 +122,6 @@ const optionChanged = function(id) {
             size:  plotData.sample_values,
         },
     }
-
     Plotly.restyle('bubble', 'x', [trace.x]);
     Plotly.restyle('bubble', 'y', [trace.y]);
     Plotly.restyle('bubble', 'text', [trace.text]);
