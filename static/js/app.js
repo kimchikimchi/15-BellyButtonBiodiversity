@@ -117,7 +117,7 @@ const optionChanged = function(id) {
     console.log(`selected id ${id}`);
 
     // Get trace data based on the ID
-    const plotData = getPlotDataByID(id, sampleLimit);
+    let plotData = getPlotDataByID(id, sampleLimit);
     console.log("Plotdata is: ");
     console.log(plotData);
     
@@ -148,6 +148,9 @@ const optionChanged = function(id) {
     Plotly.restyle('bubble', 'y', [trace.y]);
     Plotly.restyle('bubble', 'text', [trace.text]);
     Plotly.restyle('bubble', 'markers', [{color: trace.marker.color, size: trace.marker.size}]);
+
+    console.log("Wash update: " + plotData.metadata.wfreq);
+    Plotly.restyle('gauge', 'value', [plotData.metadata.wfreq]);
 };
 
 const displayDemoInfo = function (data) {
